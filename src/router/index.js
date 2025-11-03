@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../components/Home.vue";
+import BibliotecaMensagem from "../components/BibliotecaMensagem.vue";
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home,
+    path: '/mensagens',
+    name: 'BibliotecaMensagem',
+    component: BibliotecaMensagem,
   }
 ]
 
