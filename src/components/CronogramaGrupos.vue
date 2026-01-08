@@ -57,7 +57,11 @@ onMounted(async () => {
               
               <tr v-if="agendamentos.length > 0" v-for="item in agendamentos" :key="item.id_cronograma">
                 
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <td v-if="item.dia_do_desafio == -1" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  Preparação
+                </td>
+
+                <td v-else class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   Dia {{ item.dia_do_desafio }}
                 </td>
                 
