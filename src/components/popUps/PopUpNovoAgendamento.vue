@@ -56,6 +56,7 @@ onMounted(async () => {
               <label for="dia_do_desafio" class="block text-sm font-medium text-gray-700">Dia do Desafio</label>
               <select id="dia_do_desafio" v-model="diaDoDesafio" class="mt-1 w-full px-3 py-2 rounded-md shadow-sm bg-white cursor-pointer border border-gray-300">
                 <option :value="null" disabled>Selecione o dia</option>
+                <option :value="-1">Preparação</option>
                 <option v-for="dia in 13" :key="dia - 1" :value="dia - 1">
                   Dia {{dia - 1}}
                 </option>
