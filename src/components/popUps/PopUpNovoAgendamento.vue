@@ -1,17 +1,16 @@
 <script setup>
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useNovoAgendamento } from '../../composables/useNovoAgendamento.js';
 import { useBibliotecaMensagem } from '../../composables/useBibliotecaMensagem.js';
 
-// ✨ CORRIGIDO: Erro de digitação 'ip' -> 'is'
 const {
+  isEditando,
   ativo,
   diaDoDesafio,
   horaEnvio,
   mensagemId,
-  submitNewAgendamento,
-  togglePopUp, 
-  isPopUpNovoAgendamentoOpen // <-- Nome correto
+  submitAgendamento,
+  fecharPopUp,
 } = useNovoAgendamento();
 
 const {fetchMessages, mensagens} = useBibliotecaMensagem();
@@ -19,6 +18,14 @@ const {fetchMessages, mensagens} = useBibliotecaMensagem();
 onMounted(async () => {
   await fetchMessages();
 });
+
+const tituloModal = computed(() =>
+  isEditando.value ? 'Editar Horário' : 'Criar Novo Horário'
+);
+
+const textoBotaoPrincipal = computed(() =>
+  isEditando.value ? 'Atualizar Agendamento' : 'Salvar Agendamento'
+);
 </script>
 
 
@@ -31,7 +38,7 @@ onMounted(async () => {
   <div class="fixed inset-0 z-40 bg-black/85 flex items-center justify-center overflow-y-auto">
     <div class="w-[60%] bg-white rounded-lg p-6">
       <div class="mb-4">
-        <h2 class="text-2xl font-bold">Criar Novo Horário</h2>
+        <h2 class="text-2xl font-bold">{{ tituloModal }}</h2>
         <span>Preencha os dados do Agendamento</span>
       </div>
       <form>
@@ -75,11 +82,11 @@ onMounted(async () => {
           </div>
 
           <div class="justify-end flex gap-4 mt-4">
-            <button @click="togglePopUp" type="button" class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 cursor-pointer">
+            <button @click="fecharPopUp" type="button" class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 cursor-pointer">
               Cancelar
             </button>
-            <button @click.prevent="submitNewAgendamento" type="submit" class="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 cursor-pointer">
-              Salvar Agendamento
+            <button @click.prevent="submitAgendamento" type="submit" class="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 cursor-pointer">
+              {{ textoBotaoPrincipal }}
             </button>
           </div>
         </div>

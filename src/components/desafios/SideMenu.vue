@@ -1,9 +1,8 @@
 <script setup>
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
-// 1. Importe o seu logo (icon.png)
-// O caminho '../assets/icon.png' assume que este componente está em 'src/components/'
-import logo from '../assets/icon.png';
+import { useRoute, useRouter } from 'vue-router';
+import logo from '../../assets/icon.png';
+import { useAuth } from '../../composables/useAuth';
 
 // 2. Estado reativo para controlar o menu (mobile)
 const isMenuOpen = ref(false);
@@ -13,6 +12,7 @@ const toggleMenu = () => {
 
 // 3. Lógica de rota ativa
 const route = useRoute();
+const router = useRouter();
 const isActive = (path) => {
   return route.path === path;
 };
@@ -24,12 +24,14 @@ const navigate = () => {
   }
 };
 
-// 5. Função de Logout (exemplo)
+const { logout: signOut } = useAuth();
+
 const logout = () => {
-  console.log("Usuário clicou em Sair");
-  // Adicione aqui sua lógica de logout
-  // Ex: limpar token, redirecionar para /login
-  toggleMenu(); // Fecha o menu se estiver no mobile
+  signOut();
+  if (isMenuOpen.value) {
+    toggleMenu();
+  }
+  router.push({ name: 'Login' });
 };
 </script>
 
@@ -71,10 +73,10 @@ const logout = () => {
       
       <!-- Link 1: Dashboard -->
       <router-link
-        to="/"
+        to="/dashboard"
         @click="navigate"
         class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-        :class="{ 'bg-indigo-50 text-indigo-700 font-medium': isActive('/') }"
+        :class="{ 'bg-indigo-50 text-indigo-700 font-medium': isActive('/dashboard') }"
       >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10 0h3a1 1 0 001-1V10M9 20v-6a2 2 0 012-2h2a2 2 0 012 2v6" />
@@ -122,7 +124,7 @@ const logout = () => {
       </router-link>
 
       <!-- Link 5: Log de Envios -->
-      <router-link
+      <!-- <router-link
         to="/log"
         @click="navigate"
         class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900"
@@ -132,7 +134,7 @@ const logout = () => {
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
         </svg>
         <span>Log de Envios</span>
-      </router-link>
+      </router-link> -->
 
     </nav>
 

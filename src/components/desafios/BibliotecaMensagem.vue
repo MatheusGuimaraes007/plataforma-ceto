@@ -1,11 +1,11 @@
 <script setup>
 import SideMenu from './SideMenu.vue';
-import PopUpNovaMensagem from './popUps/PopUpNovaMensagem.vue';
-import {usePopUpNovaMensagem} from '../composables/usePopUpNovaMensagem.js';
-import {useBibliotecaMensagem} from '../composables/useBibliotecaMensagem.js';
+import PopUpNovaMensagem from '../popUps/PopUpNovaMensagem.vue';
+import {usePopUpNovaMensagem} from '../../composables/usePopUpNovaMensagem.js';
+import {useBibliotecaMensagem} from '../../composables/useBibliotecaMensagem.js';
 import {onMounted, ref, computed} from 'vue';
 
-const {isPopUpNovaMensagemOpen, togglePopUp} = usePopUpNovaMensagem();
+const {isPopUpNovaMensagemOpen, abrirParaCriar, abrirParaEditar} = usePopUpNovaMensagem();
 const {fetchMessages, mensagens, deletarPacoteMensagem} = useBibliotecaMensagem();
 
 const expandedPacoteId = ref(null);
@@ -90,7 +90,7 @@ function formatContent(content) {
           <h1 class="text-3xl font-bold">Biblioteca de Mensagens</h1>
           <span>Gerencie os pacotes de mensagens</span>
         </div>
-        <button @click="togglePopUp" class="bg-blue-500 p-3 rounded-2xl text-white cursor-pointer hover:bg-blue-600">+ Criar Novo Pacote</button>
+        <button @click="abrirParaCriar" class="bg-blue-500 p-3 rounded-2xl text-white cursor-pointer hover:bg-blue-600">+ Criar Novo Pacote</button>
       </div>
       <div class="p-6">
         
@@ -145,9 +145,17 @@ function formatContent(content) {
                     {{ formatarData(msg.created_at) }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button @click.stop="handleDeletar(msg)" class="text-red-600 hover:text-red-900 cursor-pointer">
-                      Excluir
-                    </button>
+                    <div class="flex justify-end gap-4">
+                      <button
+                        @click.stop="abrirParaEditar(msg)"
+                        class="text-blue-600 hover:text-blue-800 cursor-pointer"
+                      >
+                        Editar
+                      </button>
+                      <button @click.stop="handleDeletar(msg)" class="text-red-600 hover:text-red-900 cursor-pointer">
+                        Excluir
+                      </button>
+                    </div>
                   </td>
                 </tr>
                 <tr v-if="expandedPacoteId === msg.id_mensagem" class="bg-gray-50/50">

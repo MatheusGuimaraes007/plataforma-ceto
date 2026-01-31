@@ -2,7 +2,28 @@
 import { ref } from 'vue';
 import { supabase } from './useSupabase';
 
-const mensagens = ref([]); 
+const mensagens = ref([]);
+
+function prepararPassosParaSalvar(passosDoFormulario, pacoteId) {
+  return passosDoFormulario.map((passo, index) => {
+    let opcoesLimpas = null;
+    if (passo.tipo_passo === 'enquete') {
+      opcoesLimpas = (passo.poll_opcoes || []).filter((opt) => opt && opt.trim() !== '');
+      if (opcoesLimpas.length === 0) {
+        throw new Error(`A Enquete no Passo ${index + 1} precisa de pelo menos uma opção.`);
+      }
+    }
+
+    return {
+      id_mensagem: pacoteId,
+      ordem: index + 1,
+      tipo_passo: passo.tipo_passo,
+      conteudo: passo.conteudo || null,
+      url: passo.url || null,
+      poll_opcoes: opcoesLimpas,
+    };
+  });
+}
 
 export function useBibliotecaMensagem() {
   
@@ -38,23 +59,7 @@ export function useBibliotecaMensagem() {
 
     // 2. Tenta salvar os Passos
     try {
-      const passosParaSalvar = passosDoFormulario.map((passo, index) => {
-        let opcoesLimpas = null;
-        if (passo.tipo_passo === 'enquete') {
-          opcoesLimpas = passo.poll_opcoes.filter(opt => opt && opt.trim() !== '');
-          if (opcoesLimpas.length === 0) {
-            throw new Error(`A Enquete no Passo ${index + 1} precisa de pelo menos uma opção.`);
-          }
-        }
-        return {
-          id_mensagem: novoPacoteId,
-          ordem: index + 1,
-          tipo_passo: passo.tipo_passo,
-          conteudo: passo.conteudo || null,
-          url: passo.url || null,
-          poll_opcoes: opcoesLimpas
-        };
-      });
+      const passosParaSalvar = prepararPassosParaSalvar(passosDoFormulario, novoPacoteId);
 
       // 3. Salva todos os Passos
       const { error: passosError } = await supabase
@@ -70,6 +75,35 @@ export function useBibliotecaMensagem() {
       await supabase.from('mensagens_template').delete().eq('id_mensagem', novoPacoteId);
       throw error; 
     }
+  }
+
+  async function atualizarPacoteMensagem(pacoteId, nomePacote, passosDoFormulario) {
+    const { error: updateTemplateError } = await supabase
+      .from('mensagens_template')
+      .update({ nome_mensagem: nomePacote })
+      .eq('id_mensagem', pacoteId);
+    if (updateTemplateError) {
+      throw updateTemplateError;
+    }
+
+    const { error: deletePassosError } = await supabase
+      .from('mensagens_passos')
+      .delete()
+      .eq('id_mensagem', pacoteId);
+    if (deletePassosError) {
+      throw deletePassosError;
+    }
+
+    const passosParaSalvar = prepararPassosParaSalvar(passosDoFormulario, pacoteId);
+
+    const { error: insertNovosPassosError } = await supabase
+      .from('mensagens_passos')
+      .insert(passosParaSalvar);
+    if (insertNovosPassosError) {
+      throw insertNovosPassosError;
+    }
+
+    await fetchMessages();
   }
 
   // Função para deletar um pacote
@@ -91,6 +125,7 @@ export function useBibliotecaMensagem() {
     mensagens,
     fetchMessages,
     criarPacoteDeMensagens, 
+    atualizarPacoteMensagem,
     deletarPacoteMensagem 
   }
 }

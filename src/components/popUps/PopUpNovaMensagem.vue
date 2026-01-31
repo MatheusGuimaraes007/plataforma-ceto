@@ -1,24 +1,34 @@
 <script setup>
+import { computed } from 'vue';
 import { usePopUpNovaMensagem } from '../../composables/usePopUpNovaMensagem.js';
 
 const {
   isPopUpNovaMensagemOpen,
+  isEditando,
   messageName,
   passos,
-  togglePopUp,
+  fecharPopUp,
   adicionarPasso,
   removerPasso,
   adicionarOpcaoEnquete,
   removerOpcaoEnquete,
-  submitNewMessage
+  submitMessage
 } = usePopUpNovaMensagem();
+
+const tituloModal = computed(() =>
+  isEditando.value ? 'Editar Pacote de Mensagens' : 'Criar Pacote de Mensagens'
+);
+
+const textoBotaoPrincipal = computed(() =>
+  isEditando.value ? 'Atualizar Pacote' : 'Salvar Pacote'
+);
 </script>
 
 <template>
   <div v-if="isPopUpNovaMensagemOpen" class="fixed inset-0 z-40 bg-black/85 flex items-center justify-center overflow-y-auto">
     <div class="w-full max-w-2xl bg-white rounded-lg p-6 max-h-[90vh] flex flex-col">
       <div class="mb-4">
-        <h2 class="text-2xl font-bold">Criar Pacote de Mensagens</h2>
+        <h2 class="text-2xl font-bold">{{ tituloModal }}</h2>
         <span>Crie uma sequência de mensagens para agendar.</span>
       </div>
 
@@ -81,8 +91,8 @@ const {
       </form>
       
       <div class="flex justify-end gap-4 mt-6 pt-4 border-t border-gray-200">
-        <button @click="togglePopUp" type="button" class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200">Cancelar</button>
-        <button @click.prevent="submitNewMessage" type="submit" class="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">Salvar Pacote</button>
+        <button @click="fecharPopUp" type="button" class="px-5 py-2.5 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200">Cancelar</button>
+        <button @click.prevent="submitMessage" type="submit" class="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">{{ textoBotaoPrincipal }}</button>
       </div>
     </div>
   </div>
