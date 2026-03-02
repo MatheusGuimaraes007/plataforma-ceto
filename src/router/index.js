@@ -4,6 +4,8 @@ import CronogramaGrupos from "../components/desafios/CronogramaGrupos.vue";
 import Grupos from "../components/desafios/Grupos.vue";
 import Dashboard from "../components/all/Dashboard.vue";
 import Login from "../components/Login.vue";
+import PaginaInicial from "../components/all/PaginaInicial.vue";
+import FaxinaGratis from "../components/desafios/FaxinaGratis.vue";
 import { useAuth } from "../composables/useAuth";
 
 const routes = [
@@ -29,6 +31,18 @@ const routes = [
     path: '/grupos',
     name: 'Grupos',
     component: Grupos,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/pagina-inicial',
+    name: 'PaginaInicial',
+    component: PaginaInicial,
+    meta: {requiresAuth: true },
+  },
+  {
+    path: '/faxina-gratis',
+    name: 'FaxinaGratis',
+    component: FaxinaGratis,
     meta: { requiresAuth: true },
   },
   {
