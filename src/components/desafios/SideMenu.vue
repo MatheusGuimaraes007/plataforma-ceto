@@ -123,6 +123,19 @@ const logout = () => {
         <span>Cronograma</span>
       </router-link>
 
+      <!-- Link 5: Faxina grátis -->
+      <router-link
+        to="/faxina-gratis"
+        @click="navigate"
+        class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+        :class="{ 'bg-indigo-50 text-indigo-700 font-medium': isActive('/faxina-gratis') }"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 11l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+        <span>Desafio Faxina Grátis</span>
+      </router-link>
+
       <!-- Link 5: Log de Envios -->
       <!-- <router-link
         to="/log"

@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, computed, watch } from 'vue';
-import SideMenu from './SideMenu.vue'; 
+import SideMenu from '../desafios/SideMenu.vue'; 
 import { useGrupos } from '../../composables/useGrupos';
 
 const { grupos, fetchGrupos, atualizarGrupo, isLoading, totalGrupos, page, itensPorPagina } = useGrupos();
