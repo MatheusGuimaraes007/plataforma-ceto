@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import BibliotecaMensagem from "../components/desafios/BibliotecaMensagem.vue";
+import BibliotecaMensagemNovo from "../components/desafios/BibliotecaMensagemNovo.vue"; // novo padrão (antigo removido)\n
 import CronogramaGrupos from "../components/desafios/CronogramaGrupos.vue";
 import Grupos from "../components/desafios/Grupos.vue";
 import Dashboard from "../components/all/Dashboard.vue";
@@ -18,9 +18,10 @@ const routes = [
   {
     path: '/mensagens',
     name: 'BibliotecaMensagem',
-    component: BibliotecaMensagem,
+    component: BibliotecaMensagemNovo,
     meta: { requiresAuth: true },
-  },
+  }, // nova biblioteca substitui a antiga
+
   {
     path: '/cronograma',
     name: 'CronogramaGrupos',

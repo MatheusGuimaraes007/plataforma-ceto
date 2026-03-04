@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted } from 'vue';
 import { useNovoAgendamento } from '../../composables/useNovoAgendamento.js';
-import { useBibliotecaMensagem } from '../../composables/useBibliotecaMensagem.js';
+import { useBibliotecaMensagemNovo } from '../../composables/useBibliotecaMensagemNovo.js';
 
 const {
   isEditando,
@@ -13,7 +13,7 @@ const {
   fecharPopUp,
 } = useNovoAgendamento();
 
-const {fetchMessages, mensagens} = useBibliotecaMensagem();
+const {fetchMessages, mensagens} = useBibliotecaMensagemNovo();
 
 onMounted(async () => {
   await fetchMessages();

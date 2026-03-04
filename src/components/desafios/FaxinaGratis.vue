@@ -4,6 +4,14 @@ import Chart from 'chart.js/auto';
 import SideMenu from './SideMenu.vue';
 import { useMembersGroups } from '../../composables/useMembersGroups';
 
+// utility para formatar horário a partir de timestamp ISO
+function formatTime(timestamp) {
+  if (!timestamp) return '';
+  const d = new Date(timestamp);
+  if (isNaN(d)) return '';
+  return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
 const {
   paginatedLeads,
   totalLeads,
@@ -164,6 +172,7 @@ watch([freeCleaningDailyCounts, sortedDates, daysDataset, utmCampaignCounts, cam
   renderPieChart();
 });
 </script>
+<!-- duplicated script block removed; formatTime moved into top script -->
 
 <template>
   <div class="flex h-screen w-screen bg-gray-50">
@@ -227,6 +236,7 @@ watch([freeCleaningDailyCounts, sortedDates, daysDataset, utmCampaignCounts, cam
                   <th class="px-4 py-2 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Nome</th>
                   <th class="px-4 py-2 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Email</th>
                   <th class="px-4 py-2 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Data Compra</th>
+                  <th class="px-4 py-2 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Horário</th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
@@ -234,6 +244,7 @@ watch([freeCleaningDailyCounts, sortedDates, daysDataset, utmCampaignCounts, cam
                   <td class="px-4 py-2 text-sm text-gray-800">{{ lead.nome }}</td>
                   <td class="px-4 py-2 text-sm text-gray-800">{{ lead.email }}</td>
                   <td class="px-4 py-2 text-sm text-gray-800">{{ lead.data_compra }}</td>
+                  <td class="px-4 py-2 text-sm text-gray-800">{{ formatTime(lead.created_at) }}</td>
                 </tr>
               </tbody>
             </table>

@@ -1,43 +1,34 @@
 <script setup>
 import SideMenu from './SideMenu.vue';
-import PopUpNovaMensagem from '../popUps/PopUpNovaMensagem.vue';
-import {usePopUpNovaMensagem} from '../../composables/usePopUpNovaMensagem.js';
-import {useBibliotecaMensagem} from '../../composables/useBibliotecaMensagem.js';
+import PopUpNovaMensagemNovo from '../popUps/PopUpNovaMensagemNovo.vue';
+import {usePopUpNovaMensagemNovo} from '../../composables/usePopUpNovaMensagemNovo.js';
+import {useBibliotecaMensagemNovo} from '../../composables/useBibliotecaMensagemNovo.js';
 import {onMounted, ref, computed} from 'vue';
 
-const {isPopUpNovaMensagemOpen, abrirParaCriar, abrirParaEditar} = usePopUpNovaMensagem();
-const {fetchMessages, mensagens, deletarPacoteMensagem} = useBibliotecaMensagem();
+const {isPopUpNovaMensagemOpen, abrirParaCriar, abrirParaEditar} = usePopUpNovaMensagemNovo();
+const {fetchMessages, mensagens, deletarPacoteMensagem} = useBibliotecaMensagemNovo();
 
 const expandedPacoteId = ref(null);
-const filterNome = ref(''); // Mantém apenas o filtro por nome
-// Removido: const filterData = ref('');
+const filterNome = ref('');
 
 onMounted(() => {
   fetchMessages();
 });
 
-// PROPRIEDADE COMPUTADA PARA FILTRAR POR NOME E DEPOIS ORDENAR
 const mensagensFiltradasESOrdenadas = computed(() => {
     let lista = mensagens.value || [];
-
-    // 1. Filtragem por Nome (case insensitive e parcial)
     if (filterNome.value) {
         const termo = filterNome.value.toLowerCase();
         lista = lista.filter(msg =>
             msg.nome_mensagem && msg.nome_mensagem.toLowerCase().includes(termo)
         );
     }
-
-    // Removido: Lógica de Filtragem por Data
-    
-    // 2. Ordenação Alfabética por Nome
     return [...lista].sort((a, b) => {
         const nomeA = a.nome_mensagem ? a.nome_mensagem.toLowerCase() : '';
         const nomeB = b.nome_mensagem ? b.nome_mensagem.toLowerCase() : '';
         return nomeA.localeCompare(nomeB);
     });
 });
-
 
 function toggleDetails(pacoteId) {
   if (expandedPacoteId.value === pacoteId) {
@@ -76,19 +67,19 @@ function formatarData(dataISO) {
 
 function formatContent(content) {
   if (!content) return '';
-  return content.replace(/\\n/g, '\n');
+  return content.replace(/\n/g, '\n');
 }
 </script>
 
 <template>
   <div class="flex h-screen w-screen bg-gray-50">
     <SideMenu/>
-    <PopUpNovaMensagem v-if="isPopUpNovaMensagemOpen"/>
+    <PopUpNovaMensagemNovo v-if="isPopUpNovaMensagemOpen"/>
     <div class="flex-1 overflow-y-auto md:pt-0">
       <div class="p-6 flex justify-between items-center border-b border-gray-300 bg-white sticky top-0 z-10">
         <div>
-          <h1 class="text-3xl font-bold">Biblioteca de Mensagens</h1>
-          <span>Gerencie os pacotes de mensagens</span>
+          <h1 class="text-3xl font-bold">Biblioteca de Mensagens (novo)</h1>
+          <span>Teste de upload de arquivos em vez de links</span>
         </div>
         <button @click="abrirParaCriar" class="bg-blue-500 p-3 rounded-2xl text-white cursor-pointer hover:bg-blue-600">+ Criar Novo Pacote</button>
       </div>
